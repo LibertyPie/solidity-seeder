@@ -5,6 +5,7 @@
 */
 
 const colors = require("colors");
+const fs = require("fs")
 
 module.exports = class Utils {
 
@@ -49,5 +50,16 @@ module.exports = class Utils {
          console.log()
       }
 
-
+      /**
+       * exists
+       * @param {*} file 
+       * @returns 
+       */
+      static exists = (file) => {
+         return new Promise((resolve) => {
+             fs.access(file, fs.constants.F_OK, (err) => {
+                 err ? resolve(false) : resolve(true)
+             });
+         })
+     }
 }
