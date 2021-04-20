@@ -104,3 +104,7 @@ dist
 .tern-port
 
 src/.env
+
+.env
+
+dev.env
