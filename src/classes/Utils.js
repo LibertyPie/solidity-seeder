@@ -32,22 +32,16 @@ module.exports = class Utils {
 
 
       static successMsg(msg){
-         console.log()
-         console.log(`==>> %c${colors.bold.green(msg)}`,"font-size: x-large")
-         console.log()
+         console.log(`-> %c${colors.bold.green(msg)}`,"font-size: x-large")
       }
 
       static infoMsg(msg){
-         console.log()
-         console.log(`==>> %c${colors.bold.blue(msg)}`,"font-size: x-large")
-         console.log()
+         console.log(`-> %c${colors.bold.blue(msg)}`,"font-size: x-large")
       }
 
 
       static errorMsg(msg){
-         console.log()
-         console.log(`==>> %c${colors.bold.red(msg)}`,"font-size: x-large")
-         console.log()
+         console.log(`-> %c${colors.bold.red(msg)}`,"font-size: x-large")
       }
 
       /**

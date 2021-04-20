@@ -16,14 +16,17 @@ const { version } = require('../package.json');
 const path = require("path");
 var   Web3Net = require('web3-net');
 const Utils = require("./classes/Utils");
-const appRoot = require("app-root-path")
+const AppRoot = require("app-root-path")
+require('dotenv').config({path: path.resolve("../dev.env") })
 
 
 run = async () => {
-    
-    const seederRegistry = require(appRoot+"/seed/registry");
 
-    const truffleConfig = require(appRoot+"/truffle-config");
+    let appRootDir = process.env.APP_ROOT_DIR || AppRoot.path;
+
+    const seederRegistry = require(appRootDir+"/seed/registry");
+
+    const truffleConfig = require(appRootDir+"/truffle-config");
 
 
     const parser = new ArgumentParser({
@@ -49,7 +52,7 @@ run = async () => {
     let networks = truffleConfig.networks || {}
 
     if(!(netName in networks)){
-        console.error(`Network '${netName}' was not found in truffle-config`)
+        Utils.errorMsg(`Network '${netName}' was not found in truffle-config`)
         return false;
     }
 
@@ -87,11 +90,12 @@ run = async () => {
 
         if(seedFile.length == 0){
             console.log(registryItem)
-            throw new Error(`Registry seed file missing`);
+            Utils.errorMsg(`Registry seed file missing`);
+            return false;
         }
 
         //lets get the file 
-        let seedInfo = require(`${appRoot}/seed/files/${seedFile}`)
+        let seedInfo = require(`${appRootDir}/seed/files/${seedFile}`)
 
        //lets get 
        let contractName = seedInfo.contract || "";
@@ -106,12 +110,17 @@ run = async () => {
 
             if(contractMethod.length == 0){ throw new Error(`Unknown seed method ${contractMethod}`) } 
 
-            seedProcessor = require("./processor/StandardSeedProcessor");
+            seedProcessor = require("./processors/StandardSeedProcessor");
         }
 
-        let contractInfo; 
+        let contractInfoFile = `${appRootDir}/build/contracts/${contractName}.json`;
+
+        if(!(await Utils.exists(contractInfoFile))){
+            Utils.errorMsg(`Contract Info & Abi file was not found at ${contractInfoFile}, make sure you run migration first`)
+            return false;
+        }
         
-        try{ contractInfo = require(`${appRoot}/build/contracts/${contractName}.json`); } catch(e){ throw e;}
+        let contractInfo = require(contractInfoFile);
 
         let contractAbi = contractInfo.abi;
 
@@ -120,12 +129,13 @@ run = async () => {
         let cNetworkInfo = cNetworks[networkId.toString()] || {}
 
         if(Object.keys(cNetworkInfo).length == 0){
-            throw new Error(`It seems the contract '${contractName}' has not been deployed, kindly deploy contract before seeding the data`)
+            Utils.errorMsg(`It seems the contract '${contractName}' has not been deployed, kindly deploy contract before seeding the data`)
+            return false;
         }
 
         let contractAddress = cNetworkInfo.address;
 
-        console.log(`Seeding data to contract ${contractName} at ${contractAddress}`)
+        Utils.infoMsg(`Seeding data to contract ${contractName} at ${contractAddress}`)
 
         //lets load the contract in web3js
         let contractInstance = new web3.eth.Contract(contractAbi,contractAddress);
@@ -145,12 +155,16 @@ run = async () => {
         });
 
         if(seedResult.isError()){
-            Utils.errorMsg(seedResult)
-            throw new Error(seedResult.message)
+            Utils.errorMsg(seedResult.message)
+           console.log(seedResult)
         } 
 
-        Utils.successMsg(seedResult)
+
+        Utils.successMsg(seedResult.msg)
+        console.log(JSON.stringify(seedResult))
     } //end for 
+
+    process.exit()
 }
 
 

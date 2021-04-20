@@ -29,17 +29,24 @@ async function run() {
         let seedsDir = `${appRootDir}/seeds`
 
         if(!(await Utils.exists(seedsDir))){
-        // await fsp.mkdir(seedsDir,{ recursive: true })
-            await fsp.mkdir(`${seedsDir}/files`,{ recursive: true })
-            await fsp.mkdir(`${seedsDir}/processors`,{ recursive: true })
+             await fsp.mkdir(seedsDir,{ recursive: true })
         }
 
+        let seedFilesDir = `${seedsDir}/files`;
+
+        if(!(await Utils.exists(seedFilesDir))){ await fsp.mkdir(seedFilesDir,{ recursive: true }) }
+        
+        let seedProcessorsDir = `${seedsDir}/processors`;
+
+        if(!(await Utils.exists(seedProcessorsDir))){ await fsp.mkdir(seedProcessorsDir,{ recursive: true }) }
+        
+
         //lets get the registry file 
-        let registryFile = `${seedsDir}/registry.js`
+        let registryFile = `${seedsDir}/registry.json`
 
         console.log(registryFile)
 
-        let registryData = {}
+        let registryData = []
         
         if((await Utils.exists(registryFile))){
             registryData = require(registryFile);
@@ -81,19 +88,53 @@ async function run() {
 
         let seedFileName = `${contractName}_${contractMethod}`.trim().toLowerCase();
 
-        let seedFilePath = `${seedsDir}/files/${seedFileName}.js`;
+        let seedFilePath = `${seedFilesDir}/${seedFileName}.js`;
 
         if((await Utils.exists(seedFilePath))){
             Utils.errorMsg(`Seed File already exists at ${seedFilePath}, delete it first`)
             return false;
         }
 
+        //lets add the seed file to the registry
+        if(!registryData.includes(seedFileName)){
+            registryData.push(seedFileName)
+            Utils.successMsg(`Adding seedFile ${seedFileName} to registry: ${registryFile}`)
+            await fsp.writeFile(registryFile,JSON.stringify(registryData));
+        }
+
+
         Utils.successMsg(`Creating seed file at: ${seedFilePath}`)
-            
+
+        let seedFileTemplate = getSeedFileTemplate(contractName,contractMethod,seedFileName);
+
+        await fsp.writeFile(seedFilePath,seedFileTemplate);
+        
+        Utils.successMsg(`Seed file created successfully, kindly open the file and edit it at: ${seedFilePath}`)
+
     } catch (e) {
         Utils.errorMsg(e)
         console.log(e.stack)
     } 
+
+}
+
+function getSeedFileTemplate(contractName,contractMethod,seedFileName){
+return `
+/**
+ * LibertyPie (https://libertypie.com)
+ * @author LibertyPie <hello@libertypie.com>
+ * ${seedFileName}.js
+ */
+module.exports = {
+    contract: '${contractName}',
+    method:   '${contractMethod}',
+    data: [
+        /*
+        ['arg1','arg2',...'argn'],
+        ['arg1', 'arg2'...'argn']
+        */
+    ]
+}`.trim();
 
 }
 
