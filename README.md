@@ -31,8 +31,8 @@ Edit your package.json file and add the command to scripts section
 yarn seeder-init --contract HelloContract --method SetHelloMethod
 ```
 
-the --contract  is the contract you or targeting (eg. HelloContract)
-and --method is the te method of function in the targeted contract 
+the --contract  is the contract you are targeting (eg. HelloContract)  
+and --method is the te method or function in the targeted contract 
 
 after the seed files has been created, check the seeds folder in your project root and edit the file in the files sub folder
 
