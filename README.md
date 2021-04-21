@@ -61,6 +61,36 @@ The name of the contract you are targeting, it should exist in truffle build fol
 ##### method 
 The method or function in the targetted contract where the data will be fed to 
 
-##### processor 
+##### <span style="color:blue">processor</span>
 The processor is the function responsible for processing the data and calling the method/function from the contract
 The default processor is located at [src/processors/StandardSeedProcessor.js](src/processors/StandardSeedProcessor.js)
+
+below is a seed file with a custom processor
+
+```js 
+module.exports = {
+    contract: 'HelloContract',
+    method:   'SetHelloMethod',
+    processort: customDataProcessor,
+    data: [
+        /* 
+         * to seed args multiple times, add extra arrays
+         ['arg1','arg2',...'argn'],
+         ['arg1', 'arg2'...'argn']
+        */
+    ]
+}
+
+// customDataProcessor
+customDataProcessor = async ({
+    contractName,
+    contractInstance, 
+    contractMethod, 
+    argsArray,
+    networkId,
+    web3,
+    web3Account
+}) => {
+  //process and insert data here 
+}
+```
