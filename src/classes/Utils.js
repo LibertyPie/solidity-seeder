@@ -7,6 +7,7 @@
 const colors = require("colors");
 const fs = require("fs")
 
+
 module.exports = class Utils {
 
     /**
@@ -55,5 +56,11 @@ module.exports = class Utils {
                  err ? resolve(false) : resolve(true)
              });
          })
+     }
+
+
+     static toSnakeCase(_text){
+         var result = _text.replace( /([A-Z])/g, " $1" );
+         return result.split(' ').join('_').toLowerCase();
      }
 }

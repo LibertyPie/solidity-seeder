@@ -95,7 +95,7 @@ run = async () => {
         }
 
         //lets get the file 
-        let seedInfo = require(`${appRootDir}/seed/files/${seedFile}`)
+        let seedInfo = require(`${appRootDir}/seeds/files/${seedFile}`)
 
        //lets get 
        let contractName = seedInfo.contract || "";

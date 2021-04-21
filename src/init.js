@@ -100,7 +100,7 @@ async function run() {
 
         contractAbiInfo = require(contractAbiFile); 
 
-        let seedFileName = `${contractName}_${contractMethod}`.trim().toLowerCase();
+        let seedFileName = Utils.toSnakeCase(`${contractName}_${contractMethod}`).trim().toLowerCase();
 
         let seedFilePath = `${seedFilesDir}/${seedFileName}.js`;
 
