@@ -58,15 +58,4 @@ module.exports = class Utils {
          })
      }
 
-
-     static toSnakeCase(_text){
-
-         _text = _text.trim()
-         _text = _text.charAt(0).toUpperCase() + _text.slice(1);
-
-         var result = _text.trim()
-                        .replace( /([A-Z])/g, " $1" );
-                        
-         return result.split(' ').join('_').toLowerCase();
-     }
 }

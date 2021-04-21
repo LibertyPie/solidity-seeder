@@ -17,6 +17,7 @@
  const AppRoot = require("app-root-path")
  var inquirer = require('inquirer');
 const fsp = require("fs").promises
+const snakeCase = require("snake-case").snakeCase;
 require('dotenv').config({path: path.resolve("../dev.env") })
  
 async function run() {
@@ -100,7 +101,9 @@ async function run() {
 
         contractAbiInfo = require(contractAbiFile); 
 
-        let seedFileName = Utils.toSnakeCase(`${contractName}_${contractMethod}`).trim().toLowerCase();
+        let seedFileName = snakeCase(`${contractName}_${contractMethod}`);
+
+        console.log(seedFileName)
 
         let seedFilePath = `${seedFilesDir}/${seedFileName}.js`;
 
