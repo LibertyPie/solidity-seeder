@@ -63,4 +63,4 @@ The method or function in the targetted contract where the data will be fed to
 
 ##### processor 
 The processor is the function responsible for processing the data and calling the method/function from the contract
-The default processor is located at [url]src/processors/StandardSeedProcessor.js[/url]
+The default processor is located at [src/processors/StandardSeedProcessor.js](src/processors/StandardSeedProcessor.js)
