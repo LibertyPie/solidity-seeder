@@ -67,11 +67,25 @@ async function run() {
 
         //if the contract name is empty, lets request it
         if(contractName.length == 0){
-            contractName = await  inquirer.prompt({type: 'input', name: 'Contract Name', message: Utils.successMsg("Target contract name: ") })
+            let contractNameData = await  inquirer.prompt({type: 'input', name: 'Contract Name', message: Utils.successMsg("Target contract name: ") })
+
+            contractName = (contractNameData["Contract Name"] || "").trim();
+
+            if(contractName.length == 0){
+                Utils.errorMsg(`Target contract name is required`)
+                return false;
+            }
         } //end if 
 
+
         if(contractMethod.length == 0){
-            contractMethod = await  inquirer.prompt({type: 'input', name: 'Contract Method', message: Utils.successMsg("Target contract's method or function: ") })
+            let contractMethodParam = await  inquirer.prompt({type: 'input', name: 'Contract Method', message: Utils.successMsg("Target contract's method or function: ") })
+
+            contractMethod = (contractMethodParam["Contract Method"] || "").trim()
+
+            if(contractMethod.length == 0){
+                Utils.errorMsg(`Contract method is required`)
+            }
         }
 
         //lets check if the contract exists 
@@ -129,9 +143,10 @@ module.exports = {
     contract: '${contractName}',
     method:   '${contractMethod}',
     data: [
-        /*
-        ['arg1','arg2',...'argn'],
-        ['arg1', 'arg2'...'argn']
+        /* 
+         * to seed args multiple times, add extra arrays
+         ['arg1','arg2',...'argn'],
+         ['arg1', 'arg2'...'argn']
         */
     ]
 }`.trim();
