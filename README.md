@@ -32,7 +32,7 @@ yarn seeder-init --contract HelloContract --method SetHelloMethod
 ```
 
 the --contract  is the contract you are targeting (eg. HelloContract)  
-and --method is the te method or function in the targeted contract 
+and --method is the  method or function in the targeted contract 
 
 after the seed files has been created, check the seeds folder in your project root and edit the file in the files sub folder
 
