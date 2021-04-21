@@ -55,3 +55,12 @@ You add the args using an array inside the data array  as shown
 
 #### Seed File Options
 
+##### contract
+The name of the contract you are targeting, it should exist in truffle build folder
+
+##### method 
+The method or function in the targetted contract where the data will be fed to 
+
+##### processor 
+The processor is the function responsible for processing the data and calling the method/function from the contract
+The default processor is located at [url]src/processors/StandardSeedProcessor.js[/url]
