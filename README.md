@@ -15,14 +15,6 @@ npm i --save @libertypie/truffle-seeder
 yarn add  @libertypie/truffle-seeder
 ```
 
-Edit your package.json file and add the command to scripts section
-
-```json 
-  "scripts": {
-    "seeder-init": "node_modules/truffle-seeder/src/init.js",
-    "seeder-seed": "node_modules/truffle-seeder/src/seed.js",
-  }
-```
 
 ## Usage
 
