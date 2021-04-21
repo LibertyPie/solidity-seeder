@@ -55,13 +55,13 @@ You add the args using an array inside the data array  as shown
 
 #### Seed File Options
 
-##### contract
+##### contract:
 The name of the contract you are targeting, it should exist in truffle build folder
 
-##### method 
+##### method: 
 The method or function in the targetted contract where the data will be fed to 
 
-##### <span style="color:blue">processor</span>
+##### processor: 
 The processor is the function responsible for processing the data and calling the method/function from the contract
 The default processor is located at [src/processors/StandardSeedProcessor.js](src/processors/StandardSeedProcessor.js)
 
@@ -71,7 +71,7 @@ below is a seed file with a custom processor
 module.exports = {
     contract: 'HelloContract',
     method:   'SetHelloMethod',
-    processort: customDataProcessor,
+    processor: customDataProcessor,
     data: [
         /* 
          * to seed args multiple times, add extra arrays
