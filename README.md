@@ -94,3 +94,21 @@ customDataProcessor = async ({
   //process and insert data here 
 }
 ```
+
+#### Seeding the data 
+ To seed the data to the contract's method, you will run the command below
+
+ ```sh 
+  yarn seeder-seed 
+ ```
+
+ ## About
+ The npm package is developed maintained by the team at [LibertyPie Project] (https://libertypie.com)
+
+ ## Contribution
+ To contribute, kindly fork the project, at project root create a dev.env file, insert APP_ROOT_DIR pointint to your truffle project where testing will be done,
+ example: 
+
+ ```txt
+  APP_ROOT_DIR=/path/to/truffle/solidity/project
+ ```
