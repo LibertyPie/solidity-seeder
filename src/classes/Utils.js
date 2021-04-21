@@ -60,7 +60,7 @@ module.exports = class Utils {
 
 
      static toSnakeCase(_text){
-         var result = _text.replace( /([A-Z])/g, " $1" );
+         var result = _text.trim().replace( /([A-Z])/g, " $1" );
          return result.split(' ').join('_').toLowerCase();
      }
 }
