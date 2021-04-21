@@ -1,4 +1,4 @@
-# Truffle Seeder [From Liberty Pie](https://libertypie.com)
+# Truffle Seeder ([From Liberty Pie](https://libertypie.com))
 Easily seed initial data to smart contracts using this npm package 
 
 ## Installation
