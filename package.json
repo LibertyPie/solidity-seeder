@@ -1,6 +1,6 @@
 {
   "name": "@libertypie/truffle-seeder",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Easily seed initial data to smart contracts using this npm package",
   "main": "index.js",
   "dependencies": {
