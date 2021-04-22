@@ -91,7 +91,7 @@ customDataProcessor = async ({
  To seed the data to the contract's method, you will run the command below
 
  ```sh 
-  yarn seeder-seed 
+  yarn seeder-run 
  ```
 
  ## About
