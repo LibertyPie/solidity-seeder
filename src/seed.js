@@ -24,7 +24,9 @@ run = async () => {
 
     let appRootDir = process.env.APP_ROOT_DIR || AppRoot.path;
 
-    const seederRegistry = require(appRootDir+"/seeds/registry");
+    let seedsDir = appRootDir+"/seeds";
+
+    const seederRegistry = require(seedsDir+"/registry");
 
     const truffleConfig = require(appRootDir+"/truffle-config");
 
@@ -95,7 +97,7 @@ run = async () => {
         }
 
         //lets get the file 
-        let seedInfo = require(`${appRootDir}/seeds/files/${seedFile}`)
+        let seedInfo = require(`${seedsDir}/files/${seedFile}`)
 
        //lets get 
        let contractName = seedInfo.contract || "";
