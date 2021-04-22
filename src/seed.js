@@ -24,7 +24,7 @@ run = async () => {
 
     let appRootDir = process.env.APP_ROOT_DIR || AppRoot.path;
 
-    const seederRegistry = require(appRootDir+"/seed/registry");
+    const seederRegistry = require(appRootDir+"/seeds/registry");
 
     const truffleConfig = require(appRootDir+"/truffle-config");
 
