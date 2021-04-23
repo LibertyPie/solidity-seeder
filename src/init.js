@@ -60,12 +60,13 @@ async function run() {
         parser.add_argument('-v', '--version', { action: 'version', version });
         parser.add_argument('-c', '--contract', {  help: 'the contract name' });
         parser.add_argument('-m', '--method', {  help: 'the contract method which we are seeding to'});
-        parser.add_argument('-n', '--network', {  help: 'the network_id to target, leave empty for all network ids'});
+        parser.add_argument('-n', '--network', { default: '', help: 'the network_id to target, leave empty for all network ids'});
 
         let cliArgs = parser.parse_args()
 
         let contractName = (cliArgs["contract"] || "").trim();
         let contractMethod = (cliArgs["method"] || "").trim();
+        let networkId = (cliArgs["network"] || "").trim();
 
         //if the contract name is empty, lets request it
         if(contractName.length == 0){
@@ -90,6 +91,19 @@ async function run() {
             }
         }
 
+        if(networkId.length == 0){
+            let networkIdParam = await  inquirer.prompt({
+                type: 'input', name: 'Network Id', 
+                message: Utils.successMsg("Target Network Id (leave empty for all networks): ") 
+            })
+
+            networkId = (networkIdParam["Network Id"] || "").trim()
+        }
+
+        if(networkId.trim().length > 0 && !/[0-9]+/.test(networkId)){
+            Utils.errorMsg(`Network ID can be only numeric value, leave empty to target all networks`)
+        }
+
         //lets check if the contract exists 
         //lets check if the contract abi exists 
 
@@ -104,9 +118,21 @@ async function run() {
 
         let seedFileName = snakeCase(`${contractName}_${contractMethod}`);
 
-        console.log(seedFileName)
 
-        let seedFilePath = `${seedFilesDir}/${seedFileName}.js`;
+        let seedFilePath = `${seedFilesDir}/${networkId}/${seedFileName}.js`;
+
+        //lets check i network id isnt null, lets check or create dir
+        if(networkId.length > 0){
+
+            let seedFilePathWithNetId = `${seedFilesDir}/network_ids/${networkId}/`;
+
+            if(!(await Utils.exists(seedFilePathWithNetId))){
+                await fsp.mkdir(seedFilePathWithNetId,{recursive: true})
+            }
+
+            seedFilePath = `${seedFilePathWithNetId}/${seedFileName}.js`;
+        }
+
 
         if((await Utils.exists(seedFilePath))){
             Utils.errorMsg(`Seed File already exists at ${seedFilePath}, delete it first`)
