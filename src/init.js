@@ -60,6 +60,7 @@ async function run() {
         parser.add_argument('-v', '--version', { action: 'version', version });
         parser.add_argument('-c', '--contract', {  help: 'the contract name' });
         parser.add_argument('-m', '--method', {  help: 'the contract method which we are seeding to'});
+        parser.add_argument('-n', '--network', {  help: 'the network_id to target, leave empty for all network ids'});
 
         let cliArgs = parser.parse_args()
 
