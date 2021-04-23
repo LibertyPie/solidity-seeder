@@ -96,9 +96,17 @@ run = async () => {
             return false;
         }
 
-        //lets get the file 
-        let seedInfo = require(`${seedsDir}/files/${seedFile}`)
+        let seedFile = `${seedsDir}/files/network_ids/${networkId}/${seedFile}`;
 
+        if(!(Utils.exists(seedFile))){
+            seedFile = `${seedsDir}/files/${seedFile}`;
+        }
+
+        Utils.infoMsg(`Loading Seed File: ${seedFile}`)
+
+        //lets get the file 
+        let seedInfo = require(seedFile)
+        
        //lets get 
        let contractName = seedInfo.contract || "";
        let contractMethod = seedInfo.method || "";
