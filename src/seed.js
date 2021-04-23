@@ -79,6 +79,7 @@ run = async () => {
     //lets get network id
     let networkId = await web3Net.getId();
 
+    Utils.successMsg(`Detected Network Id: ${networkId}`)
     //let _seeder = new Seeder();
 
     //lets get the registry
@@ -88,18 +89,18 @@ run = async () => {
 
     for(let seedFileName of seederRegistry){
         
-        let seedFile = (seedFileName || "").trim();
+        seedFileName = (seedFileName || "").trim();
 
-        if(seedFile.length == 0){
+        if(seedFileName.length == 0){
             console.log(registryItem)
             Utils.errorMsg(`Registry seed file missing`);
             return false;
         }
 
-        let seedFile = `${seedsDir}/files/network_ids/${networkId}/${seedFile}`;
+        let seedFile = `${seedsDir}/files/network_ids/${networkId}/${seedFileName}.js`;
 
-        if(!(Utils.exists(seedFile))){
-            seedFile = `${seedsDir}/files/${seedFile}`;
+        if(!(await Utils.exists(seedFile))){
+            seedFile = `${seedsDir}/files/${seedFileName}.js`;
         }
 
         Utils.infoMsg(`Loading Seed File: ${seedFile}`)
