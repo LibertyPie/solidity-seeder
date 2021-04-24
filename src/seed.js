@@ -79,7 +79,7 @@ run = async () => {
     //lets get network id
     let networkId = await web3Net.getId();
 
-    Utils.successMsg(`Detected Network Id: ${networkId}`)
+    Utils.successMsg(`Detected Network Name: ${netName} Id: ${networkId}`)
     //let _seeder = new Seeder();
 
     //lets get the registry
@@ -97,7 +97,7 @@ run = async () => {
             return false;
         }
 
-        let seedFile = `${seedsDir}/files/network_ids/${networkId}/${seedFileName}.js`;
+        let seedFile = `${seedsDir}/files/network_ids/${netName}/${seedFileName}.js`;
 
         if(!(await Utils.exists(seedFile))){
             seedFile = `${seedsDir}/files/${seedFileName}.js`;
