@@ -26,6 +26,9 @@ async function run() {
 
         let appRootDir = process.env.APP_ROOT_DIR || AppRoot.path;
 
+        const truffleConfig = require(appRootDir+"/truffle-config");
+
+
         //lets check if seed directory exists 
         let seedsDir = `${appRootDir}/seeds`
 
@@ -66,7 +69,7 @@ async function run() {
 
         let contractName = (cliArgs["contract"] || "").trim();
         let contractMethod = (cliArgs["method"] || "").trim();
-        let networkId = (cliArgs["network"] || "").trim();
+        let networkName = (cliArgs["network"] || "").trim();
 
         //if the contract name is empty, lets request it
         if(contractName.length == 0){
@@ -91,17 +94,25 @@ async function run() {
             }
         }
 
-        if(networkId.length == 0){
-            let networkIdParam = await  inquirer.prompt({
-                type: 'input', name: 'Network Id', 
-                message: Utils.successMsg("Target Network Id (leave empty for all networks): ") 
+        if(networkName.length == 0){
+            
+            let networkNameParam = await  inquirer.prompt({
+                type: 'input', name: 'Network Name', 
+                message: Utils.successMsg("Target Network Name,  (leave empty for all networks): ") 
             })
 
-            networkId = (networkIdParam["Network Id"] || "").trim()
+            networkName = (networkNameParam["Network Name"] || "").trim()
         }
 
-        if(networkId.trim().length > 0 && !/[0-9]+/.test(networkId)){
-            Utils.errorMsg(`Network ID can be only numeric value, leave empty to target all networks`)
+        if(networkName.trim().length > 0){
+
+            //lets get the network profile 
+            let networks = truffleConfig.networks || {}
+
+            if(!(networkName in networks)){
+                Utils.errorMsg(`Network '${networkName}' was not found in truffle-config, aborting`)
+                return false;
+            }
         }
 
         //lets check if the contract exists 
@@ -119,18 +130,18 @@ async function run() {
         let seedFileName = snakeCase(`${contractName}_${contractMethod}`);
 
 
-        let seedFilePath = `${seedFilesDir}/${networkId}/${seedFileName}.js`;
+        let seedFilePath = `${seedFilesDir}/${seedFileName}.js`;
 
         //lets check i network id isnt null, lets check or create dir
-        if(networkId.length > 0){
+        if(networkName.length > 0){
 
-            let seedFilePathWithNetId = `${seedFilesDir}/network_ids/${networkId}/`;
+            let seedFilePathWithNetName = `${seedFilesDir}/networks/${networkName}/`;
 
-            if(!(await Utils.exists(seedFilePathWithNetId))){
-                await fsp.mkdir(seedFilePathWithNetId,{recursive: true})
+            if(!(await Utils.exists(seedFilePathWithNetName))){
+                await fsp.mkdir(seedFilePathWithNetName,{recursive: true})
             }
 
-            seedFilePath = `${seedFilePathWithNetId}/${seedFileName}.js`;
+            seedFilePath = `${seedFilePathWithNetName}/${seedFileName}.js`;
         }
 
 
