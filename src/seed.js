@@ -77,7 +77,9 @@ run = async () => {
     let web3Net = new Web3Net(provider);
 
     //lets get network id
-    let networkId = await web3Net.getId();
+    let networkId = networkInfo.network_id ||  await web3Net.getId();
+
+    //console.log("networkId ==>> ", networkId)
 
     Utils.successMsg(`Detected Network Name: ${netName} Id: ${networkId}`)
     //let _seeder = new Seeder();
