@@ -89,7 +89,7 @@ module.exports = class Utils {
     */
    static toBytes32(data){
       var dataHex = _uweb3.utils.fromAscii(data, 32);
-      return _uweb3.eth.abi.encodeParameter('bytes32', dataHex);
+      return (new _uweb3.modules.Eth()).abi.encodeParameter('bytes32', dataHex);
    }
 
 }
