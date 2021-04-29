@@ -62,7 +62,12 @@ module.exports = async ({
     let web3Net = new Web3Net(provider);
 
     //lets get network id
-    let networkId = networkInfo.network_id ||  await web3Net.getId();
+    let networkId = networkInfo.network_id || ""
+    
+    if(networkId.length == 0 || networkId == "*"){
+        networkId = await web3Net.getId();
+    }
+    
 
     //console.log("networkId ==>> ", networkId)
 
@@ -166,7 +171,7 @@ module.exports = async ({
         Utils.successMsg(seedResult.msg)
 
         Utils.infoMsg(JSON.stringify(seedResult))
-        
+
     } //end for 
 
     process.exit()
