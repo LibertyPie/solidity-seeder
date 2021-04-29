@@ -7,6 +7,7 @@
 const colors = require("colors");
 const fs = require("fs")
 const process = require("process")
+const _uweb3 = (new require("web3"))
 
 module.exports = class Utils {
 
@@ -66,5 +67,29 @@ module.exports = class Utils {
              });
          })
      }
+
+   /**
+   * getGasEstimate
+   */
+   static async  getGasEstimate(contractInstance, contractMethod, params, web3Account) {
+      try {
+
+         let result = await contractInstance.methods[contractMethod](...params).estimateGas({from: web3Account})
+         
+         return result;
+      } catch (e){
+         console.error(`getGasEstimate error for: ${contractMethod}`)
+         throw e;
+      }
+   }
+
+
+   /**
+    * toBytes32
+    */
+   static toBytes32(data){
+      var dataHex = _uweb3.fromAscii(data, 32);
+      return _uweb3.eth.abi.encodeParameter('bytes32', dataHex);
+   }
 
 }

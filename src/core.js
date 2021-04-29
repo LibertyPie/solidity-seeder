@@ -12,13 +12,10 @@ const seed = require("./seed");
  
 module.exports = class Core extends Utils {
 
-    static seed_run({
-        network,
-        contract,
-        silent
-    }) {
-        return seed({network,contract,silent})
-    }
-
+    //run seeder
+    static seeder_run({network,silentMode}) {
+        silentMode = silentMode || false
+        return seed({network,silentMode})
+    } //end run seeder
     
 }

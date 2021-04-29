@@ -18,7 +18,7 @@
  var inquirer = require('inquirer');
 const fsp = require("fs").promises
 const snakeCase = require("snake-case").snakeCase;
-require('dotenv').config({path: path.resolve("../dev.env") })
+require('dotenv').config({path: path.resolve(path.dirname(__dirname),"dev.env") })
  
 async function run() {
     

@@ -23,7 +23,7 @@ module.exports = async ({
 
             Utils.infoMsg(`Retrieving gas for contract method ${contractMethod}`)
 
-            let gas = await getGasEstimate(contractInstance, contractMethod, _argArray, web3Account);
+            let gas = await Utils.getGasEstimate(contractInstance, contractMethod, _argArray, web3Account);
 
             Utils.successMsg(`${contractMethod} Gas Fee: ${gas} wei`)
 
@@ -42,17 +42,3 @@ module.exports = async ({
     return Status.successPromise("", resultsArray)
 }
 
-/**
- * getGasEstimate
- */
-getGasEstimate = async (contractInstance, contractMethod, params, web3Account) => {
-    try {
-
-       let result = await contractInstance.methods[contractMethod](...params).estimateGas({from: web3Account})
-        
-       return result;
-    } catch (e){
-        console.error(`getGasEstimate error for: ${contractMethod}`)
-        throw e;
-    }
-}

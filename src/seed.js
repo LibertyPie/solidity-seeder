@@ -13,7 +13,7 @@ const path = require("path");
 var   Web3Net = require('web3-net');
 const Utils = require("./classes/Utils");
 const AppRoot = require("app-root-path")
-require('dotenv').config({path: path.resolve("../dev.env") })
+require('dotenv').config({path: path.resolve(path.dirname(__dirname),"dev.env") })
 
 
 module.exports = async ({
@@ -21,18 +21,19 @@ module.exports = async ({
     silentMode
 }) => {
 
-    silentModeFlag = (silentMode) ? 1 : 0;
-
-    process.env['SILENT_MODE'] = silentModeFlag;
-
-
     let appRootDir = process.env.APP_ROOT_DIR || AppRoot.path;
+
 
     let seedsDir = appRootDir+"/seeds";
 
     const seederRegistry = require(seedsDir+"/registry");
 
     const truffleConfig = require(appRootDir+"/truffle-config");
+
+    silentModeFlag = (silentMode) ? 1 : 0;
+
+    process.env['SILENT_MODE'] = silentModeFlag;
+
 
     //lets get the network profile 
     let networks = truffleConfig.networks || {}
@@ -163,7 +164,9 @@ module.exports = async ({
 
 
         Utils.successMsg(seedResult.msg)
-        console.log(JSON.stringify(seedResult))
+
+        Utils.infoMsg(JSON.stringify(seedResult))
+        
     } //end for 
 
     process.exit()
