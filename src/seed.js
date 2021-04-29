@@ -137,6 +137,10 @@ run = async () => {
 
         let contractAbi = contractInfo.abi;
 
+        //let deployedBytecode = contractInfo.deployedBytecode;
+
+        //console.log("deployedBytecode ===>>> ", deployedBytecode)
+
         let cNetworks = contractInfo.networks || {};
 
         let cNetworkInfo = cNetworks[networkId.toString()] || {}
@@ -164,7 +168,8 @@ run = async () => {
             argsArray: seedDataArray,
             networkId,
             web3,
-            web3Account
+            web3Account,
+            contractInfo
         });
 
         if(seedResult.isError()){

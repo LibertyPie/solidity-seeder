@@ -21,7 +21,13 @@ module.exports = async ({
 
         try {
 
-            let result = await contractInstance.methods[contractMethod](..._argArray).send({from: web3Account});
+            Utils.infoMsg(`Retrieving gas for contract method ${contractMethod}`)
+
+            let gas = await getGasEstimate(contractInstance, contractMethod, _argArray, web3Account);
+
+            Utils.successMsg(`${contractMethod} Gas Fee: ${gas} wei`)
+
+            let result = await contractInstance.methods[contractMethod](..._argArray).send({from: web3Account, gas});
 
             Utils.successMsg(`Standard Seed Tx Success: ${result.transactionHash}`)
 
@@ -34,4 +40,19 @@ module.exports = async ({
     } //end loop
 
     return Status.successPromise("", resultsArray)
+}
+
+/**
+ * getGasEstimate
+ */
+getGasEstimate = async (contractInstance, contractMethod, params, web3Account) => {
+    try {
+
+       let result = await contractInstance.methods[contractMethod](...params).estimateGas({from: web3Account})
+        
+       return result;
+    } catch (e){
+        console.error(`getGasEstimate error for: ${contractMethod}`)
+        throw e;
+    }
 }
