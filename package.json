@@ -22,8 +22,8 @@
     "seeder-init": "./src/init.js"
   },
   "bin": {
-    "seeder-run": "node ./cli/seeder_run.js",
-    "seeder-init": "node ./src/init.js"
+    "seeder-run": "./cli/seeder_run.js",
+    "seeder-init": "./src/init.js"
   },
   "repository": {
     "type": "git",
