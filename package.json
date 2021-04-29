@@ -18,12 +18,12 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seeder-run": "./src/seed.js",
+    "seeder-run": "./cli/seeder_run.js",
     "seeder-init": "./src/init.js"
   },
   "bin": {
-    "seeder-run": "./src/seed.js",
-    "seeder-init": "./src/init.js"
+    "seeder-run": "node ./cli/seeder_run.js",
+    "seeder-init": "node ./src/init.js"
   },
   "repository": {
     "type": "git",

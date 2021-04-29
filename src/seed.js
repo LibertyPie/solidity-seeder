@@ -6,13 +6,9 @@
  * @license MIT
  */
  
-const ethers = require("ethers");
 const process = require("process");
-const colors = require("colors");
 const web3 = require("web3")
 const Web3 = require("web3")
-const { ArgumentParser } = require('argparse');
-const { version } = require('../package.json');
 const path = require("path");
 var   Web3Net = require('web3-net');
 const Utils = require("./classes/Utils");
@@ -20,7 +16,15 @@ const AppRoot = require("app-root-path")
 require('dotenv').config({path: path.resolve("../dev.env") })
 
 
-run = async () => {
+module.exports = async ({
+    network,
+    silentMode
+}) => {
+
+    silentModeFlag = (silentMode) ? 1 : 0;
+
+    process.env['SILENT_MODE'] = silentModeFlag;
+
 
     let appRootDir = process.env.APP_ROOT_DIR || AppRoot.path;
 
@@ -30,35 +34,15 @@ run = async () => {
 
     const truffleConfig = require(appRootDir+"/truffle-config");
 
-
-    const parser = new ArgumentParser({
-      description: 'Seed migration'
-    });
-     
-    parser.add_argument('-v', '--version', { action: 'version', version });
-    parser.add_argument('-c', '--contract', { default: 'all', help: 'the contract to seed, default is all' });
-    parser.add_argument('-n', '--network', { default: 'development', help: 'the network in truffle-config to use, default is development' });
-
-    let args= parser.parse_args()
-
-    let contract = args["contract"];
-    
-
-    if(contract == null || contract.toString().trim().length == 0 || contract.toLowerCase() == "all"){
-        contract = "";
-    }
-
-    let netName = args["network"];
-    
     //lets get the network profile 
     let networks = truffleConfig.networks || {}
 
-    if(!(netName in networks)){
-        Utils.errorMsg(`Network '${netName}' was not found in truffle-config`)
+    if(!(network in networks)){
+        Utils.errorMsg(`Network '${network}' was not found in truffle-config`)
         return false;
     }
 
-    let networkInfo = networks[netName];
+    let networkInfo = networks[network];
 
     let provider;
 
@@ -81,7 +65,7 @@ run = async () => {
 
     //console.log("networkId ==>> ", networkId)
 
-    Utils.successMsg(`Detected Network Name: ${netName} Id: ${networkId}`)
+    Utils.successMsg(`Detected Network Name: ${network} Id: ${networkId}`)
     //let _seeder = new Seeder();
 
     //lets get the registry
@@ -99,7 +83,7 @@ run = async () => {
             return false;
         }
 
-        let seedFile = `${seedsDir}/files/network_ids/${netName}/${seedFileName}.js`;
+        let seedFile = `${seedsDir}/files/networks/${network}/${seedFileName}.js`;
 
         if(!(await Utils.exists(seedFile))){
             seedFile = `${seedsDir}/files/${seedFileName}.js`;
@@ -184,6 +168,3 @@ run = async () => {
 
     process.exit()
 }
-
-
-run();

@@ -6,10 +6,13 @@
 
 const colors = require("colors");
 const fs = require("fs")
-
+const process = require("process")
 
 module.exports = class Utils {
 
+   static isSilentMode = () => {
+      return (process.env["SILENT_MODE"] == 1)
+   }
     /**
      * fromDaysToMilli
      */
@@ -33,16 +36,22 @@ module.exports = class Utils {
 
 
       static successMsg(msg){
-         console.log(`-> %c${colors.bold.green(msg)}`,"font-size: x-large")
+         if(!this.isSilentMode()){
+            console.log(`-> %c${colors.bold.green(msg)}`,"font-size: x-large")
+         }
       }
 
       static infoMsg(msg){
-         console.log(`-> %c${colors.bold.blue(msg)}`,"font-size: x-large")
+         if(!this.isSilentMode()){
+            console.log(`-> %c${colors.bold.blue(msg)}`,"font-size: x-large")
+         }
       }
 
 
       static errorMsg(msg){
-         console.log(`-> %c${colors.bold.red(msg)}`,"font-size: x-large")
+         if(!this.isSilentMode()){ 
+            console.log(`-> %c${colors.bold.red(msg)}`,"font-size: x-large")
+         }
       }
 
       /**
