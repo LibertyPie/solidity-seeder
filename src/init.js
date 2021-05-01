@@ -26,7 +26,9 @@ async function run() {
 
         let appRootDir = process.env.APP_ROOT_DIR || AppRoot.path;
 
-        const truffleConfig = require(appRootDir+"/truffle-config");
+        let devEnvConfigName = "";
+        let devConfigFile = "";
+        let devEnvConfig = ""; 
 
 
         //lets check if seed directory exists 
@@ -48,7 +50,7 @@ async function run() {
         //lets get the registry file 
         let registryFile = `${seedsDir}/registry.json`
 
-        console.log(registryFile)
+        //console.log(registryFile)
 
         let registryData = []
         
@@ -63,13 +65,45 @@ async function run() {
         parser.add_argument('-v', '--version', { action: 'version', version });
         parser.add_argument('-c', '--contract', {  help: 'the contract name' });
         parser.add_argument('-m', '--method', {  help: 'the contract method which we are seeding to'});
-        parser.add_argument('-n', '--network', { default: '', help: 'the network_id to target, leave empty for all network ids'});
+        parser.add_argument('-n', '--network', {  help: 'the network name to target, leave empty for all network ids'});
+        parser.add_argument('-e', '--env', {  help: 'Your development environment (truffle, hardhat), default is truffle'});
 
         let cliArgs = parser.parse_args()
 
         let contractName = (cliArgs["contract"] || "").trim();
         let contractMethod = (cliArgs["method"] || "").trim();
         let networkName = (cliArgs["network"] || "").trim();
+        let devEnv = (cliArgs["env"] || "").trim();
+
+        //if dev environment was not provided
+        if(devEnv.length == 0){
+            
+            let devEnvConfigData = await  inquirer.prompt({
+                type: 'list',
+                choices: [ "truffle", "hardhat" ],
+                name: 'Development Environment', 
+                message: Utils.successMsg("Development Environment: ") 
+            })
+
+            devEnv = (devEnvConfigData["Development Environment"] || "").trim();
+        } ///end if 
+
+        if(!['truffle','hardhat'].includes(devEnv)){
+            Utils.errorMsg(`Unknown development environment, supported are truffle & hardhat`)
+            return false;
+        }
+
+        devEnvConfigFile = (devEnv == 'truffle') ? 'truffle-config.js' : 'hardhat.config.js';
+
+        devConfigFile = appRootDir+"/"+devEnvConfigFile
+
+        if(!(await Utils.exists(devConfigFile))){
+            Utils.errorMsg(`Config file ${devConfigFile} was not found`)
+            return false;
+        }
+
+      
+        devEnvConfig =  require(devConfigFile);
 
         //if the contract name is empty, lets request it
         if(contractName.length == 0){
@@ -96,18 +130,34 @@ async function run() {
 
         if(networkName.length == 0){
             
+            //lets get the networks from config file
+            let configNetworks = Object.keys(devEnvConfig.networks  || {})
+
+            /*if(configNetworks.length == 0){
+                Utils.errorMsg(`No networks found in ${devConfigFile}, atleast add one to continue`)
+                return false;
+            }*/
+
+            configNetworks.unshift("All Networks")
+  
             let networkNameParam = await  inquirer.prompt({
-                type: 'input', name: 'Network Name', 
+                type: 'list',
+                choices: configNetworks,
+                name: 'Network Name', 
                 message: Utils.successMsg("Target Network Name,  (leave empty for all networks): ") 
             })
 
             networkName = (networkNameParam["Network Name"] || "").trim()
+
+            networkName = networkName.replace(" ","_").toLowerCase()
+
+            if(networkName == "all_networks") networkName = "";
         }
 
         if(networkName.trim().length > 0){
 
             //lets get the network profile 
-            let networks = truffleConfig.networks || {}
+            let networks = devEnvConfig.networks || {}
 
             if(!(networkName in networks)){
                 Utils.errorMsg(`Network '${networkName}' was not found in truffle-config, aborting`)
@@ -118,10 +168,17 @@ async function run() {
         //lets check if the contract exists 
         //lets check if the contract abi exists 
 
-        let contractAbiFile = `${appRootDir}/build/contracts/${contractName}.json`
+        let contractAbiFile; 
+
+        if(devEnv == 'truffle') {
+            contractAbiFile = `${appRootDir}/build/contracts/${contractName}.json`
+        } else {
+            let abiSubDir = (networkName.length == 0) ? "hardhat" : networkName;
+            contractAbiFile =  `${appRootDir}/deployments/${abiSubDir}/${contractName}.json`
+        }
 
         if(!(await Utils.exists(contractAbiFile))){
-            Utils.errorMsg(`Contract Abi file was not found at ${contractAbiFile}, make sure you run migration first`)
+            Utils.errorMsg(`Contract Abi file was not found at ${contractAbiFile}, make sure you compile the contract first`)
             return false;
         }
 

@@ -92,4 +92,10 @@ module.exports = class Utils {
       return (new _uweb3.modules.Eth()).abi.encodeParameter('bytes32', dataHex);
    }
 
+   /**
+    * fetchAndParseJson
+    */
+   static async fetchAndParseJson(path) {
+      
+   }
 }

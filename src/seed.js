@@ -13,23 +13,43 @@ const path = require("path");
 var   Web3Net = require('web3-net');
 const Utils = require("./classes/Utils");
 const AppRoot = require("app-root-path")
+const fps = require("fs/promises")
 require('dotenv').config({path: path.resolve(path.dirname(__dirname),"dev.env") })
 
 
 module.exports = async ({
+    devEnv,
     network,
     silentMode
 }) => {
 
     let appRootDir = process.env.APP_ROOT_DIR || AppRoot.path;
 
+    let devConfigFile = "";
+    let devEnvConfig = ""; 
+
 
     let seedsDir = appRootDir+"/seeds";
 
     const seederRegistry = require(seedsDir+"/registry");
 
-    const truffleConfig = require(appRootDir+"/truffle-config");
+    //const truffleConfig = require(appRootDir+"/truffle-config");
 
+    if(!['truffle','hardhat'].includes(devEnv)){
+        Utils.errorMsg(`Unknown development environment, supported are truffle & hardhat`)
+        return false;
+    }
+
+    devEnvConfigFile = (devEnv == 'truffle') ? 'truffle-config.js' : 'hardhat.config.js';
+
+    devConfigFile = appRootDir+"/"+devEnvConfigFile
+
+    if(!(await Utils.exists(devConfigFile))){
+        Utils.errorMsg(`Config file ${devConfigFile} was not found`)
+        return false;
+    }
+
+   
     silentModeFlag = (silentMode) ? 1 : 0;
 
     process.env['SILENT_MODE'] = silentModeFlag;
