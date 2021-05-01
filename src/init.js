@@ -105,6 +105,8 @@ async function run() {
       
         devEnvConfig =  require(devConfigFile);
 
+        console.log(devEnvConfig)
+
         //if the contract name is empty, lets request it
         if(contractName.length == 0){
             let contractNameData = await  inquirer.prompt({type: 'input', name: 'Contract Name', message: Utils.successMsg("Target contract name: ") })

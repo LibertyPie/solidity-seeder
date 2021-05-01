@@ -6,8 +6,11 @@
 
 const colors = require("colors");
 const fs = require("fs")
-const process = require("process")
 const _uweb3 = (new require("web3"))
+const process = require("process")
+const extractJson = require('extract-json-from-string');
+
+const fsp = require("fs/promises")
 
 module.exports = class Utils {
 
@@ -96,6 +99,7 @@ module.exports = class Utils {
     * fetchAndParseJson
     */
    static async fetchAndParseJson(path) {
-      
+      let fileData = await (await fsp.readFile(path)).toString('utf8')
+      return extractJson(fileData)
    }
 }

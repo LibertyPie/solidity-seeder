@@ -49,7 +49,10 @@ module.exports = async ({
         return false;
     }
 
-   
+    devEnvConfig =  Utils.fetchAndParseJson(devConfigFile);
+
+    console.log(devEnvConfig)
+
     silentModeFlag = (silentMode) ? 1 : 0;
 
     process.env['SILENT_MODE'] = silentModeFlag;
